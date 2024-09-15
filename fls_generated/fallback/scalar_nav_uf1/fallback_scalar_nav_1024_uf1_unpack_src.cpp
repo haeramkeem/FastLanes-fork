@@ -91,27 +91,48 @@ namespace generated
 				[[maybe_unused]] uint8_t base_0 = 0ULL;
 				for (int i = 0; i < 128; ++i)
 				{
-					register_0 = *(in + (0 * 128) + (i * 1) + 0);
-					tmp_0 = (register_0) & ((1ULL << 3) - 1);
-					out[(i * 1) + (0 * 128) + (128 * 0)] = tmp_0;
-					tmp_0 = (register_0 >> 3) & ((1ULL << 3) - 1);
-					out[(i * 1) + (0 * 128) + (128 * 1)] = tmp_0;
-					tmp_0 = (register_0 >> 6) & ((1ULL << 2) - 1);
-					register_0 = *(in + (0 * 128) + (i * 1) + 128);
-					tmp_0 |= ((register_0) & ((1ULL << 1) - 1)) << 2;
-					out[(i * 1) + (0 * 128) + (128 * 2)] = tmp_0;
-					tmp_0 = (register_0 >> 1) & ((1ULL << 3) - 1);
-					out[(i * 1) + (0 * 128) + (128 * 3)] = tmp_0;
-					tmp_0 = (register_0 >> 4) & ((1ULL << 3) - 1);
-					out[(i * 1) + (0 * 128) + (128 * 4)] = tmp_0;
-					tmp_0 = (register_0 >> 7) & ((1ULL << 1) - 1);
-					register_0 = *(in + (0 * 128) + (i * 1) + 256);
-					tmp_0 |= ((register_0) & ((1ULL << 2) - 1)) << 1;
-					out[(i * 1) + (0 * 128) + (128 * 5)] = tmp_0;
-					tmp_0 = (register_0 >> 2) & ((1ULL << 3) - 1);
-					out[(i * 1) + (0 * 128) + (128 * 6)] = tmp_0;
-					tmp_0 = (register_0 >> 5) & ((1ULL << 3) - 1);
-					out[(i * 1) + (0 * 128) + (128 * 7)] = tmp_0;
+					// MASK info.
+					// MASK		CODE				BINARY
+					// ---
+					// MASK1	((1ULL << 1) - 1)		1b
+					// MASK2	((1ULL << 2) - 1)		11b
+					// MASK3	((1ULL << 3) - 1)		111b
+					//
+					// INSTR. FORMATTING info.
+					// INSTR.					CODE
+					// ---
+					// $DST = LOAD($SRC+$OFFSET)			$DST = *($SRC + (0 * 128) + (i * 1) + $(128*OFFSET));
+					// STORE($DST+$OFFSET,$SRC)			$DST[(i * 1) + (0 * 128) + (128 * $OFFSET)] = $SRC;
+					// AND_RSHIFT($REG,$SHIFT,$MASK)		($REG >> $SHIFT) & ($MASK)
+					// AND_LSHIFT($REG,$SHIFT,$MASK)		($REG & ($MASK)) << $SHIFT
+					// $ARG1 = OR($ARG1,$ARG2)			$ARG1 |= ARG2
+					//
+					// CODE info.
+					// AUTO-GENERATED CODE						// LISTING IN PAPER
+					// ---								// ---
+					register_0 = *(in + (0 * 128) + (i * 1) + 0);			// LOAD<8>(in+0);
+					tmp_0 = (register_0) & ((1ULL << 3) - 1);			// AND_RSHIFT<8>(r0,0,MASK3);
+					out[(i * 1) + (0 * 128) + (128 * 0)] = tmp_0;			// STORE<8>(out+0,r1);
+					tmp_0 = (register_0 >> 3) & ((1ULL << 3) - 1);			// AND_RSHIFT<8>(r0,3,MASK3);
+					out[(i * 1) + (0 * 128) + (128 * 1)] = tmp_0;			// STORE<8>(out+1,r1);
+					tmp_0 = (register_0 >> 6) & ((1ULL << 2) - 1);			// AND_RSHIFT<8>(r0,6,MASK2);
+
+					register_0 = *(in + (0 * 128) + (i * 1) + 128);			// LOAD<8>(in+1);
+					tmp_0 |= ((register_0) & ((1ULL << 1) - 1)) << 2;		// OR<8>(r1,AND_LSHIFT<8>(r0,2,MASK1));
+					out[(i * 1) + (0 * 128) + (128 * 2)] = tmp_0;			// STORE(out+2,r1);
+					tmp_0 = (register_0 >> 1) & ((1ULL << 3) - 1);			// AND_RSHIFT<8>(r0,1,MASK3);
+					out[(i * 1) + (0 * 128) + (128 * 3)] = tmp_0;			// STORE<8>(out+3,r1);
+					tmp_0 = (register_0 >> 4) & ((1ULL << 3) - 1);			// AND_RSHIFT<8>(r0,4,MASK3);
+					out[(i * 1) + (0 * 128) + (128 * 4)] = tmp_0;			// STORE<8>(out+4,r1);
+					tmp_0 = (register_0 >> 7) & ((1ULL << 1) - 1);			// AND_RSHIFT<8>(r0,7,MASK1);
+
+					register_0 = *(in + (0 * 128) + (i * 1) + 256);			// LOAD<8>(in+2);
+					tmp_0 |= ((register_0) & ((1ULL << 2) - 1)) << 1;		// OR<8>(r1,AND_LSHIFT<8>(r0,1,MASK2));
+					out[(i * 1) + (0 * 128) + (128 * 5)] = tmp_0;			// STORE(out+5,r1);
+					tmp_0 = (register_0 >> 2) & ((1ULL << 3) - 1);			// AND_RSHIFT<8>(r0,2,MASK3);
+					out[(i * 1) + (0 * 128) + (128 * 6)] = tmp_0;			// STORE<8>(out+6,r1);
+					tmp_0 = (register_0 >> 5) & ((1ULL << 3) - 1);			// AND_RSHIFT<8>(r0,5,MASK3);
+					out[(i * 1) + (0 * 128) + (128 * 7)] = tmp_0;			// STORE<8>(out+7,r1);
 				}
 			}
 			static void unpack_4bw_8ow_8crw_1uf(const uint8_t *__restrict a_in_p, uint8_t *__restrict a_out_p)
